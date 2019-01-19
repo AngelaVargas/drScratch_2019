@@ -8,7 +8,6 @@ from django.views.decorators import csrf
 from django.views.decorators.csrf import csrf_protect
 from django.core.cache import cache
 from django.core.mail import EmailMessage
-#from django.shortcuts import render_to_response
 from django.shortcuts import render
 from django.template import RequestContext as RC
 from django.template import Context, loader
@@ -49,7 +48,6 @@ import urllib2
 import shutil
 import unicodedata
 import csv
-#import kurt
 import zipfile
 from zipfile import ZipFile
 from django.shortcuts import render
@@ -70,7 +68,7 @@ import deadCode
 def main(request):
     """Main page"""
 
-
+    
     # The first time one user enters
     # Create the dashboards associated to users
     flagUser = 0
@@ -238,6 +236,8 @@ def selector(request):
         #Project uploaded from computer
         #Analyze by "upload" method
         d = _upload(request)
+        if d['Error']:
+          return d
         filename = request.FILES['zipFile'].name.encode('utf-8')
         dic = {'url': "",'filename':filename}
         d.update(dic)
@@ -289,6 +289,7 @@ def _upload(request):
             d = {'Error': 'MultiValueDict'}
             return  d
 
+        
         # Create DB of files
         now = datetime.now()
         method = "project"
@@ -334,10 +335,6 @@ def _upload(request):
                 destination.write(chunk)
 
 
-        #Create 2.0Scratch's File
-        #file_name = change_version(request, file_name)
-
-
         # Analyze the scratch project
         try:
             d = analyze_project(request, file_name, filename)
@@ -350,7 +347,6 @@ def _upload(request):
             newPathProject = fileSaved.split("/uploads/")[0] + \
                              "/error_analyzing/" + \
                              fileSaved.split("/uploads/")[1]
-            print oldPathProject
             shutil.copy(oldPathProject, newPathProject)
             d = {'Error': 'analyzing'}
             return d
@@ -377,8 +373,6 @@ def _url(request):
             url = form.cleaned_data['urlProject']
             idProject = process_string_url(url)
             d = generator_dic(request,idProject)
-            print "RETORNA d: "
-            print d
             return d
         else:
             d = {'Error': 'MultiValueDict'}
@@ -620,62 +614,36 @@ def check_version(filename):
 
     return version
 
-"""
 
-def change_version(request, filename):
-
-
-    #Change the version from 1.4 to 2.0
-
-
-    p = kurt.Project.load(filename)
-    p.convert("scratch20")
-    p.save()
-    filename = filename.split('.')[0] + '.sb2'
-
-    return filename
-
-"""
 
 #________________________ AUTOMATIC ANALYSIS _________________________________#
 
 def analyze_project(request, file_name, filename):
-    
 
-    print "ENTRAAAAAAAAAAAAAAAAA"
 
     dictionary = {}
+    
     if os.path.exists(file_name):
+        
         list_file = file_name.split('(')
-        if len(list_file) > 1:
-            file_name = list_file[0] + '\(' + list_file[1]
-            list_file = file_name.split(')')
-            file_name = list_file[0] + '\)' + list_file[1]
+       
+        #if len(list_file) > 1:
+        #    file_name = list_file[0] + '\(' + list_file[1]
+        #    list_file = file_name.split(')')
+        #    file_name = list_file[0] + '\)' + list_file[1]
 
         
-        
+        print "LLEGA"
         resultMastery = analyzer.main(file_name)
         resultSpriteNaming = spriteNaming.main(file_name)
         resultBackdropNaming = backdropNaming.main(file_name)
+        print "PASA 3"
         resultDuplicateScript = duplicateScripts.main(file_name)
+        print "PASA 4"
         resultDeadCode = deadCode.main(file_name)
+        print "PASA 5"
 
-        
-        #Request to hairball
-        #metricMastery = "hairball -p mastery.Mastery " + file_name
-        #metricSpriteNaming = "hairball -p convention.SpriteNaming " + file_name
-        #metricDuplicateScript = "hairball -p duplicate.DuplicateScripts " + file_name
-        #metricDeadCode = "hairball -p blocks.DeadCode " + file_name
-        #metricInitialization = "hairball -p initialization.AttributeInitialization " + file_name
-
-        #Response from hairball
-        #resultMastery = os.popen(metricMastery).read()
-        #resultDuplicateScript = os.popen(metricDuplicateScript).read()
-        #resultSpriteNaming = os.popen(metricSpriteNaming).read()
-        #resultDeadCode = os.popen(metricDeadCode).read()
-        #resultInitialization = os.popen(metricInitialization).read()
-
-      
+             
         #Create a dictionary with necessary information
         dictionary.update(proc_mastery(request,resultMastery, filename))
         dictionary.update(proc_sprite_naming(resultSpriteNaming, filename))

@@ -29,8 +29,6 @@ class DeadCode():
             for _, blocks_dicc in dicc["blocks"].iteritems():   
                event_variable = any(blocks_dicc["opcode"]==event for event in self.event_variables)
                if event_variable == False:
-                 print "PARENT:",blocks_dicc["opcode"], blocks_dicc["parent"],  "FIN"
-                 print "NEXT: ", blocks_dicc["next"]
                  if blocks_dicc["parent"] == None and blocks_dicc["next"] == None:
                     blocks_list.append(blocks_dicc["opcode"])
                 

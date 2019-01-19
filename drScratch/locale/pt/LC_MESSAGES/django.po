@@ -777,11 +777,11 @@ msgstr "Analise a partir da url"
 #: templates/coder/main.html:25 templates/main/main.html:226
 #: templates/main/main_new.html:230 templates/organization/main.html:26
 msgid ""
-"If you have your <span class='colored-text'><a data-toggle='modal' "
+"2. If you have your <span class='colored-text'><a data-toggle='modal' "
 "href='#modalProject'>project</a></span> downloaded in the computer you can "
 "analyze it here:"
 msgstr ""
-"Se você tem seu <span class='colored-text'><a data-toggle='modal' "
+"2. Se você tem seu <span class='colored-text'><a data-toggle='modal' "
 "href='#modalProject'>project</a></span> em seu computador, você pode analisá-"
 "lo aqui:"
 
