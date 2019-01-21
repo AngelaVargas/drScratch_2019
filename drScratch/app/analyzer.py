@@ -32,7 +32,8 @@ class Mastery:
           for dicc_key, dicc_value in dicc.iteritems():
             if dicc_key == "blocks":
               for blocks, blocks_value in dicc_value.iteritems():
-                self.total_blocks.append(blocks_value)
+                if type(blocks_value) is dict:
+                  self.total_blocks.append(blocks_value)
   
    for block in self.total_blocks:
      for key, value in block.iteritems():

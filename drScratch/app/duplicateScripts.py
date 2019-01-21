@@ -30,8 +30,9 @@ class DuplicateScripts():
            for dicc_key, dicc_value in dicc.iteritems():
              if dicc_key == "blocks":
                for blocks, blocks_value in dicc_value.iteritems():
-                 self.blocks_dicc[blocks] = blocks_value
-                 self.total_blocks.append(blocks_value)
+                 if type(blocks_value) is dict:
+                   self.blocks_dicc[blocks] = blocks_value
+                   self.total_blocks.append(blocks_value)
 
      
      for block in self.total_blocks:

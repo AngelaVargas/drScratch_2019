@@ -26,11 +26,12 @@ class DeadCode():
           for dicc in value:
             sprite = dicc["name"]
             blocks_list = []
-            for _, blocks_dicc in dicc["blocks"].iteritems():   
-               event_variable = any(blocks_dicc["opcode"]==event for event in self.event_variables)
-               if event_variable == False:
-                 if blocks_dicc["parent"] == None and blocks_dicc["next"] == None:
-                    blocks_list.append(blocks_dicc["opcode"])
+            for _, blocks_dicc in dicc["blocks"].iteritems():
+               if type(blocks_dicc) is dict:   
+                 event_variable = any(blocks_dicc["opcode"]==event for event in self.event_variables)
+                 if event_variable == False:
+                   if blocks_dicc["parent"] == None and blocks_dicc["next"] == None:
+                      blocks_list.append(blocks_dicc["opcode"])
                 
             
             if blocks_list:

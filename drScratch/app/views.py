@@ -763,23 +763,15 @@ def proc_dead_code(lines, filename):
     lcharacter = []
     lblocks = []
     if dead_code:
-      lLines = str(dead_code).split(",")
-      for frame in lLines:
-				      if frame != "":      
-				          if ':' in frame:
-				              name = frame.split("'")[1]
-				              block = frame.split("[[")[1]
-				              block = block.split("]")[0]
-				              block = block.split("'")[1]
-				              name = " " + name
-				          else:
-				              block = frame.split("[")[1]
-				              block = block.split("]]")[0]
-				              name = " " + name
-				                
-				          lcharacter.append(name)
-				          lblocks.append(block) 
-				          iterator += 1
+      d = ast.literal_eval(dead_code[0])
+      keys = d.keys()
+      values = d.values()
+      items = d.items()
+
+      for keys, values in items:
+	lcharacter.append(keys)
+	lblocks.append(values) 
+	iterator += 1
 
     dic = {}
     dic["deadCode"] = dic
