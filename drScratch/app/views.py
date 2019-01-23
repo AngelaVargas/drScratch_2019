@@ -236,10 +236,11 @@ def selector(request):
         #Project uploaded from computer
         #Analyze by "upload" method
         d = _upload(request)
-        if d['Error']:
+        if d['Error'] != 'None':
           return d
         filename = request.FILES['zipFile'].name.encode('utf-8')
         dic = {'url': "",'filename':filename}
+        print d
         d.update(dic)
 
     elif '_url' in request.POST:
@@ -1121,6 +1122,9 @@ def download_certificate(request):
             language = request.LANGUAGE_CODE
         else:
             language = 'en'
+        print filename
+        print level
+        print language
         pyploma.generate(filename,level,language)
         path_to_file = os.path.dirname(os.path.dirname(__file__)) + "/app/certificate/output.pdf"
         pdf_data = open(path_to_file, 'r')
